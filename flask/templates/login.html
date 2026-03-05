@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% set hide_nav = True %}
+
+{% block title %}Iniciar Sesión Empleados{% endblock %}
+
+{% block content %}
+<div class="min-h-full flex items-center justify-center -mt-8">
+    <div class="max-w-md w-full">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-brand tracking-tighter">MACUIN</h1>
+            <p class="text-gray-800 mt-2 text-sm uppercase tracking-wider font-bold">Acceso a Personal Interno</p>
+        </div>
+
+        <div class="bg-white py-8 px-6 shadow-xl rounded-xl border-t-4 border-brand sm:px-10">
+            <form class="space-y-6" action="{{ url_for('login') }}" method="POST">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-900">Usuario / Correo
+                        Institucional</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <input id="email" name="email" type="email" required
+                            class="appearance-none block w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-900">Contraseña Corporativa</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <input id="password" name="password" type="password" required
+                            class="appearance-none block w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand transition-colors">
+                        Ingresar al Sistema
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6 border-t border-gray-200 pt-4">
+                <p class="text-xs text-center text-gray-500">
+                    Sistema de uso exclusivo para el personal de MACUIN Autopartes.<br>Todo acceso es monitoreado.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

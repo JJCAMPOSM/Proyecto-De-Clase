@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Base de Datos PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: proyecto_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: proyectouser
+      POSTGRES_PASSWORD: proyectopassword
+      POSTGRES_DB: proyectodb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  # App Laravel (Para Clientes Externos)
+  laravel:
+    build:
+      context: ./laravel
+    container_name: proyecto_laravel
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./laravel:/var/www/html
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # App Flask (Para Personal Interno)
+  flask:
+    build:
+      context: ./flask
+    container_name: proyecto_flask
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./flask:/app
+    depends_on:
+      - db
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MACUIN Interno - {% block title %}{% endblock %}</title>
+    <!-- Tailwind CSS (Usando la misma tecnología gráfica que el cliente externo para mantener consistencia) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#E20613',
+                            dark: '#c10510',
+                            light: '#f7404a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased font-sans flex h-screen overflow-hidden">
+    
+    {% if not hide_nav %}
+    <!-- Sidebar de Navegación Lateral -->
+    <div class="flex flex-col w-64 bg-gray-900 border-r border-gray-800 flex-shrink-0 text-white transition-all duration-300">
+        <div class="h-16 flex items-center px-6 bg-gray-950 border-b border-gray-800">
+            <a href="{{ url_for('dashboard') }}" class="font-bold text-2xl text-brand tracking-tighter">
+                MACUIN<span class="text-white tracking-normal text-sm ml-1 uppercase">Interno</span>
+            </a>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4">
+            <nav class="space-y-1 px-3">
+                <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}bg-gray-800 text-white border-l-4 border-brand{% else %}text-gray-300 hover:bg-gray-800 hover:text-white border-l-4 border-transparent{% endif %} group flex items-center px-3 py-2.5 text-sm font-medium transition-colors">
+                    <svg class="{% if request.endpoint == 'dashboard' %}text-brand{% else %}text-gray-400 group-hover:text-gray-300{% endif %} mr-3 flex-shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard / Reportes
+                </a>
+                
+                <a href="{{ url_for('orders') }}" class="{% if request.endpoint == 'orders' %}bg-gray-800 text-white border-l-4 border-brand{% else %}text-gray-300 hover:bg-gray-800 hover:text-white border-l-4 border-transparent{% endif %} group flex items-center px-3 py-2.5 text-sm font-medium transition-colors">
+                    <svg class="{% if request.endpoint == 'orders' %}text-brand{% else %}text-gray-400 group-hover:text-gray-300{% endif %} mr-3 flex-shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    Gestión de Pedidos
+                </a>
+
+                <a href="{{ url_for('inventory') }}" class="{% if request.endpoint == 'inventory' %}bg-gray-800 text-white border-l-4 border-brand{% else %}text-gray-300 hover:bg-gray-800 hover:text-white border-l-4 border-transparent{% endif %} group flex items-center px-3 py-2.5 text-sm font-medium transition-colors">
+                    <svg class="{% if request.endpoint == 'inventory' %}text-brand{% else %}text-gray-400 group-hover:text-gray-300{% endif %} mr-3 flex-shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    Inventario de Productos
+                </a>
+            </nav>
+        </div>
+        
+        <div class="p-4 bg-gray-950 border-t border-gray-800">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="h-8 w-8 rounded-full bg-brand flex items-center justify-center text-white font-bold text-sm">
+                        AD
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-white">Admin Interno</p>
+                    <a href="{{ url_for('logout') }}" class="text-xs font-medium text-gray-400 hover:text-brand transition-colors">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Contenido Principal -->
+    <div class="flex flex-col flex-1 w-0 overflow-hidden">
+        {% if not hide_nav %}
+        <!-- Top bar móvil (solo visible en sm) -->
+        <div class="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-white border-b border-gray-200">
+            <button class="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand">
+                <span class="sr-only">Abrir menú lateral</span>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        {% endif %}
+
+        <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none bg-gray-100 p-6 md:p-8">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+</body>
+</html>
