@@ -3,185 +3,220 @@
 {% block title %}Gestión de Inventario{% endblock %}
 
 {% block content %}
-<div class="mb-8 flex justify-between items-center">
-    <div>
-        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Inventario de Productos</h1>
-        <p class="text-sm text-gray-500 mt-1">Gestión y control de existencias en almacén</p>
-    </div>
-
-    <div class="flex items-center space-x-3">
-        <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </div>
-            <input type="text"
-                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-brand focus:border-brand sm:text-sm"
-                placeholder="Buscar por SKU o Nombre...">
+<div x-data="inventoryManager()">
+    <div class="mb-8 flex justify-between items-start">
+        <div>
+            <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Inventario de Productos</h1>
+            <p class="text-sm text-gray-500 mt-1">Total de artículos: 150</p>
         </div>
-        <button
+
+        <button @click="openCreateModal()"
             class="bg-brand text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-brand-dark transition-colors shadow-sm flex items-center border border-transparent">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
-                </path>
-            </svg>
-            Nuevo Producto
+            <span class="mr-2 text-lg">+</span> Agregar Artículo
         </button>
     </div>
-</div>
 
-<div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
-    <!-- Tabla de Inventario -->
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">SKU /
-                        Producto</th>
-                    <th scope="col"
-                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        Categoría</th>
-                    <th scope="col"
-                        class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Stock
-                        Mín.</th>
-                    <th scope="col"
-                        class="px-6 py-3 text-center text-xs font-bold text-gray-800 uppercase tracking-wider">Stock
-                        Actual</th>
-                    <th scope="col"
-                        class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        Estado</th>
-                    <th scope="col"
-                        class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-
-                <!-- Stock Normal -->
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex flex-col">
-                            <span class="text-xs text-gray-500 font-mono mb-1">MC-AM001</span>
-                            <span class="text-sm font-semibold text-gray-900">Amortiguador Delantero Gas Nissan Versa
-                                12-19</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        Suspensión
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">
-                        10
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-gray-900 tabular-nums">
-                        45
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                        <span
-                            class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Óptimo
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                        <button
-                            class="text-gray-600 hover:text-brand bg-gray-50 hover:bg-red-50 px-3 py-1.5 rounded-md border border-gray-200 transition-colors">
-                            Editar Stock
-                        </button>
-                    </td>
-                </tr>
-
-                <!-- Alerta: Stock Bajo Mínimo -->
-                <tr class="bg-red-50 transition-colors border-l-4 border-brand">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex flex-col">
-                            <span class="text-xs text-brand font-mono mb-1">MC-BL042</span>
-                            <span class="text-sm font-semibold text-red-900">Juego de Balatas Delanteras Chevrolet
-                                Aveo</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-800">
-                        Frenos
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-red-800">
-                        15
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-extrabold text-brand tabular-nums">
-                        3
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                        <span
-                            class="px-2 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-red-200 text-brand outline-none ring-2 ring-red-300 ring-offset-1">
-                            ¡Reabastecer!
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                        <button
-                            class="text-white bg-brand hover:bg-brand-dark px-3 py-1.5 rounded-md border border-transparent shadow-sm transition-colors">
-                            Ajustar Stock
-                        </button>
-                    </td>
-                </tr>
-
-                <!-- Stock Cerca del Mínimo -->
-                <tr class="hover:bg-yellow-50 transition-colors border-l-4 border-yellow-400">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex flex-col">
-                            <span class="text-xs text-gray-500 font-mono mb-1">MC-FA999</span>
-                            <span class="text-sm font-semibold text-gray-900">Filtro de Aceite Sintético FRAM Toyota
-                                Hilux</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        Motor
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">
-                        20
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-yellow-600 tabular-nums">
-                        22
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                        <span
-                            class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                            Poco Stock
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                        <button
-                            class="text-gray-600 hover:text-brand bg-gray-50 hover:bg-red-50 px-3 py-1.5 rounded-md border border-gray-200 transition-colors">
-                            Editar Stock
-                        </button>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
+    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
+        <div class="flex items-center space-x-2 mb-4 text-gray-700">
+            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            <span class="font-bold text-sm">Filtros</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="flex flex-col col-span-1 md:col-span-1">
+                <label class="text-xs font-bold text-gray-600 mb-1">Buscar pedido o cliente</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </span>
+                    <input type="text" placeholder="Número de pedido o cliente..." class="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand">
+                </div>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-xs font-bold text-gray-600 mb-1">Categoría</label>
+                <select class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand bg-white">
+                    <option>Todas las categorías</option>
+                    <option>Suspensión</option>
+                    <option>Frenos</option>
+                    <option>Motor</option>
+                </select>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-xs font-bold text-gray-600 mb-1">Desde</label>
+                <input type="date" class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand">
+            </div>
+            <div class="flex flex-col">
+                <label class="text-xs font-bold text-gray-600 mb-1">Hasta</label>
+                <input type="date" class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand">
+            </div>
+        </div>
     </div>
 
-    <!-- Paginación Mock -->
-    <div class="bg-gray-50 px-6 py-3 border-t border-gray-200 flex items-center justify-between sm:px-6">
-        <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-                <p class="text-sm text-gray-700">
-                    Mostrando <span class="font-medium">1</span> a <span class="font-medium">3</span> de <span
-                        class="font-medium">150</span> productos en catálogo
-                </p>
-            </div>
-            <div>
-                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                    <a href="#"
-                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">Anterior</a>
-                    <a href="#" aria-current="page"
-                        class="z-10 bg-brand border-brand text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
-                    <a href="#"
-                        class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a>
-                    <a href="#"
-                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">Siguiente</a>
-                </nav>
+    <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-brand">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-white uppercase">Código</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-white uppercase">Nombre</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-white uppercase">Categoría</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-white uppercase">Marca</th>
+                        <th class="px-6 py-3 text-center text-xs font-bold text-white uppercase">Precio</th>
+                        <th class="px-6 py-3 text-center text-xs font-bold text-white uppercase">Stock</th>
+                        <th class="px-6 py-3 text-center text-xs font-bold text-white uppercase">Ubicación</th>
+                        <th class="px-6 py-3 text-center text-xs font-bold text-white uppercase">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <template x-for="item in products" :key="item.code">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600" x-text="item.code"></td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm font-bold text-gray-900" x-text="item.name"></div>
+                                <div class="text-xs text-gray-500 truncate max-w-xs" x-text="item.description"></div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600" x-text="item.category"></span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600" x-text="item.brand"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-center text-gray-900 tabular-nums" x-text="'$' + item.price"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span :class="item.stock <= 10 ? 'text-brand font-bold' : 'text-green-600 font-bold'" x-text="item.stock"></span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-600 font-mono" x-text="item.location"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-2">
+                                <button @click="openEditModal(item)" class="text-blue-500 hover:text-blue-700 p-1">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                </button>
+                                <button @click="deleteProduct(item.code)" class="text-brand hover:text-brand-dark p-1">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div x-show="modalOpen" class="fixed z-50 inset-0 overflow-y-auto" style="display: none;">
+        <div class="flex items-center justify-center min-h-screen p-4 text-center">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="modalOpen = false"></div>
+
+            <div class="bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:max-w-3xl sm:w-full p-8 relative">
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="bg-brand p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900" x-text="isEdit ? 'Editar Artículo' : 'Nuevo Artículo'"></h3>
+                        <p class="text-sm text-gray-500">Modifique la información del producto</p>
+                    </div>
+                </div>
+
+                <form @submit.prevent="saveProduct()">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Código del Producto *</label>
+                            <input type="text" x-model="formData.code" class="w-full border-gray-300 rounded-lg text-sm p-2 focus:ring-brand focus:border-brand" :disabled="isEdit">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Nombre del Producto *</label>
+                            <input type="text" x-model="formData.name" class="w-full border-gray-300 rounded-lg text-sm p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Categoría *</label>
+                            <select x-model="formData.category" class="w-full border-gray-300 rounded-lg text-sm p-2">
+                                <option>Frenos</option>
+                                <option>Motor</option>
+                                <option>Suspensión</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Marca *</label>
+                            <input type="text" x-model="formData.brand" class="w-full border-gray-300 rounded-lg text-sm p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Precio ($) *</label>
+                            <input type="number" x-model="formData.price" class="w-full border-gray-300 rounded-lg text-sm p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Stock *</label>
+                            <input type="number" x-model="formData.stock" class="w-full border-gray-300 rounded-lg text-sm p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Ubicación en Almacén *</label>
+                            <input type="text" x-model="formData.location" class="w-full border-gray-300 rounded-lg text-sm p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Proveedor *</label>
+                            <input type="text" x-model="formData.provider" class="w-full border-gray-300 rounded-lg text-sm p-2">
+                        </div>
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Descripción *</label>
+                            <textarea x-model="formData.description" rows="3" class="w-full border-gray-300 rounded-lg text-sm p-2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end space-x-3">
+                        <button type="button" @click="modalOpen = false" class="px-6 py-2 border border-gray-300 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50">Cancelar</button>
+                        <button type="submit" class="px-6 py-2 bg-brand text-white rounded-lg text-sm font-bold hover:bg-brand-dark flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function inventoryManager() {
+    return {
+        modalOpen: false,
+        isEdit: false,
+        products: [
+            { code: 'FRN-001', name: 'Pastillas de Freno Delanteras', category: 'Frenos', brand: 'Brembo', price: 1250, stock: 45, location: 'A-12', provider: 'Auto Parts Mexico', description: 'Pastillas de freno cerámicas premium para mejor rendimiento' },
+            { code: 'MTR-105', name: 'Filtro de Aceite', category: 'Motor', brand: 'Mann Filter', price: 185, stock: 120, location: 'B-05', provider: 'Motor Refacciones', description: 'Filtro de aceite para motor de alto rendimiento' },
+            { code: 'SUS-220', name: 'Amortiguador Trasero', category: 'Suspensión', brand: 'Monroe', price: 2850, stock: 8, location: 'C-08', provider: 'Suspensiones SA', description: 'Amortiguador hidráulico para suspensión trasera' }
+        ],
+        formData: {},
+        
+        openCreateModal() {
+            this.isEdit = false;
+            this.formData = { category: 'Frenos' };
+            this.modalOpen = true;
+        },
+        
+        openEditModal(item) {
+            this.isEdit = true;
+            this.formData = { ...item };
+            this.modalOpen = true;
+        },
+        
+        saveProduct() {
+            // Lógica Simulación AJAX
+            console.log("Enviando petición AJAX...");
+            if (this.isEdit) {
+                const index = this.products.findIndex(p => p.code === this.formData.code);
+                this.products[index] = { ...this.formData };
+                alert("Producto actualizado exitosamente (Simulación AJAX)");
+            } else {
+                this.products.push({ ...this.formData });
+                alert("Nuevo producto creado exitosamente (Simulación AJAX)");
+            }
+            this.modalOpen = false;
+        },
+        
+        deleteProduct(code) {
+            if (confirm("¿Está seguro de eliminar este artículo?")) {
+                this.products = this.products.filter(p => p.code !== code);
+                console.log("Producto " + code + " eliminado vía AJAX");
+            }
+        }
+    }
+}
+</script>
 {% endblock %}
