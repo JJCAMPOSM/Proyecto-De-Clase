@@ -3,10 +3,43 @@
 @section('title', 'Mis Pedidos')
 
 @section('content')
-<div class="py-6" x-data="{ openModal: false, selectedOrder: null }">
+<div class="py-6" x-data="{ openModal: false, selectedOrder: null, showFilters: false }">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <h1 class="text-3xl font-extrabold text-gray-900 mb-8">Historial de Pedidos</h1>
 
+        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6">
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <div class="relative flex-1 w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" placeholder="Buscar por folio o número de parte..." 
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 sm:text-sm">
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <select class="block w-full md:w-40 pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 rounded-lg">
+                        <option value="">Todos los Estatus</option>
+                        <option value="proceso">En Proceso</option>
+                        <option value="entregado">Entregado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+
+                    <select class="block w-full md:w-40 pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 rounded-lg">
+                        <option value="">Cualquier Fecha</option>
+                        <option value="today">Hoy</option>
+                        <option value="month">Este Mes</option>
+                        <option value="year">Este Año</option>
+                    </select>
+
+                    <button class="w-full md:w-auto inline-flex justify-center items-center px-6 py-2 border border-transparent text-sm font-bold rounded-lg shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -20,7 +53,6 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <!-- Fila 1 -->
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 font-mono">
                                 #ORD-2023-0098
@@ -46,7 +78,6 @@
                             </td>
                         </tr>
 
-                        <!-- Fila 2 -->
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 font-mono">
                                 #ORD-2023-0045
@@ -72,7 +103,6 @@
                             </td>
                         </tr>
 
-                        <!-- Fila 3 -->
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 font-mono">
                                 #ORD-2023-0012
@@ -101,7 +131,6 @@
                 </table>
             </div>
             
-            <!-- Pagination (Dummy) -->
             <div class="bg-gray-50 px-6 py-3 border-t border-gray-200 flex items-center justify-between sm:px-6">
                 <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between">
                     <div>
@@ -114,10 +143,8 @@
         </div>
     </div>
 
-    <!-- Alpine.js Modal for Order Details -->
     <div x-show="openModal" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            
             <div x-show="openModal" 
                  x-transition:enter="ease-out duration-300" 
                  x-transition:enter-start="opacity-0" 
