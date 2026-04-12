@@ -12,14 +12,14 @@
     loading: false,
     orderDetail: null,
 
-    fetchOrderDetail(folio) {
-        this.selectedFolio = folio;
+    fetchOrderDetail(orderId) {
+        this.selectedFolio = `#ORD-${orderId}`;
         this.openDetailModal = true;
         this.loading = true;
         this.orderDetail = null;
         
         // Petición AJAX al servidor
-        fetch(`/pedidos/detalle/${folio.replace('#', '')}`)
+        fetch(`/pedidos/detalle/${orderId}`)
             .then(response => response.json())
             .then(data => {
                 this.orderDetail = data;
@@ -136,85 +136,65 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-bold text-gray-900 font-mono">#ORD-2023-0098</div>
-                            <div class="text-xs text-gray-500">hace 2 horas</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Juan Pérez</div>
-                            <div class="text-xs font-semibold text-blue-600 bg-blue-50 inline-block px-1 rounded">
-                                Externo</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900 max-w-xs truncate">2x Amortiguador Delantero Gas...</div>
-                            <div class="text-xs text-gray-500">+1 artículo más</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-900 tabular-nums">
-                            $2,726.00
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                            <select
-                                class="bg-yellow-50 text-yellow-800 border-yellow-200 rounded-md shadow-sm focus:ring-brand focus:border-brand text-xs font-bold py-1 px-2 border">
-                                <option value="Pendiente">Pendiente</option>
-                                <option value="En Proceso" selected>En Proceso</option>
-                                <option value="Enviado">Enviado</option>
-                                <option value="Entregado">Entregado</option>
-                                <option value="Cancelado">Cancelado</option>
-                            </select>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center space-x-2">
-                            <button
-                                @click="fetchOrderDetail('#ORD-2023-0098')"
-                                class="text-brand hover:text-brand-dark px-3 py-1.5 rounded-md text-xs font-bold border border-brand transition-colors shadow-sm">
-                                Detalle
-                            </button>
-                            <button
-                                @click="openUpdateModal = true; selectedFolio = '#ORD-2023-0098'; selectedStatus = 'En Proceso'; currentNotes = 'Piezas separadas del almacén. Esperando recolección de paquetería.'"
-                                class="text-white bg-gray-800 hover:bg-black px-3 py-1.5 rounded-md text-xs font-medium transition-colors shadow-sm focus:ring-2 focus:ring-offset-1 focus:ring-gray-900">
-                                Actualizar / Notas
-                            </button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-bold text-gray-900 font-mono">#ORD-2023-0099</div>
-                            <div class="text-xs text-gray-500">hace 5 horas</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">Sucursal Norte</div>
-                            <div class="text-xs font-semibold text-purple-600 bg-purple-50 inline-block px-1 rounded">
-                                Interno</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900 max-w-xs truncate">10x Filtro Aceite Toyota</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-900 tabular-nums">
-                            $1,800.00
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                            <select
-                                class="bg-gray-100 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-brand focus:border-brand text-xs font-bold py-1 px-2 border">
-                                <option value="Pendiente" selected>Pendiente</option>
-                                <option value="En Proceso">En Proceso</option>
-                                <option value="Enviado">Enviado</option>
-                                <option value="Entregado">Entregado</option>
-                                <option value="Cancelado">Cancelado</option>
-                            </select>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center space-x-2">
-                            <button
-                                @click="fetchOrderDetail('#ORD-2023-0099')"
-                                class="text-brand hover:text-brand-dark px-3 py-1.5 rounded-md text-xs font-bold border border-brand transition-colors shadow-sm">
-                                Detalle
-                            </button>
-                            <button
-                                @click="openUpdateModal = true; selectedFolio = '#ORD-2023-0099'; selectedStatus = 'Pendiente'; currentNotes = ''"
-                                class="text-white bg-gray-800 hover:bg-black px-3 py-1.5 rounded-md text-xs font-medium transition-colors shadow-sm focus:ring-2 focus:ring-offset-1 focus:ring-gray-900">
-                                Actualizar / Notas
-                            </button>
-                        </td>
-                    </tr>
+                    {% if orders %}
+                        {% for order in orders %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-bold text-gray-900 font-mono">#ORD-{{ order.id }}</div>
+                                    <div class="text-xs text-gray-500">{{ order.creado_en or 'Fecha no disponible' }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ order.cliente_nombre or ('Usuario ' ~ order.usuario_id) }}</div>
+                                    <div class="text-xs font-semibold inline-block px-1 rounded {{ 'text-blue-600 bg-blue-50' if order.tipo_cliente == 'Externo' else 'text-purple-600 bg-purple-50' }}">
+                                        {{ order.tipo_cliente or 'Cliente' }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if order.detalles %}
+                                        <div class="space-y-1">
+                                            {% for item in order.detalles %}
+                                                <div class="text-sm text-gray-900">
+                                                    {{ item.cantidad }}x {{ item.producto_nombre or ('Producto #' ~ item.producto_id) }}
+                                                </div>
+                                                <div class="text-xs text-gray-500">Unitario: ${{ "%.2f"|format(item.precio_unitario or 0.0) }} · Total: ${{ "%.2f"|format(item.subtotal or 0.0) }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="text-sm text-gray-900">Sin productos registrados</div>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gray-900 tabular-nums">
+                                    ${{ "%.2f"|format(order.total or 0.0) }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                    <select class="bg-gray-100 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-brand focus:border-brand text-xs font-bold py-1 px-2 border">
+                                        <option value="Pendiente" {{ 'selected' if order.estado == 'Pendiente' else '' }}>Pendiente</option>
+                                        <option value="En Proceso" {{ 'selected' if order.estado == 'En Proceso' else '' }}>En Proceso</option>
+                                        <option value="Enviado" {{ 'selected' if order.estado == 'Enviado' else '' }}>Enviado</option>
+                                        <option value="Entregado" {{ 'selected' if order.estado == 'Entregado' else '' }}>Entregado</option>
+                                        <option value="Cancelado" {{ 'selected' if order.estado == 'Cancelado' else '' }}>Cancelado</option>
+                                    </select>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center space-x-2">
+                                    <button
+                                        @click="fetchOrderDetail({{ order.id }})"
+                                        class="text-brand hover:text-brand-dark px-3 py-1.5 rounded-md text-xs font-bold border border-brand transition-colors shadow-sm">
+                                        Detalle
+                                    </button>
+                                    <button
+                                        @click="openUpdateModal = true; selectedFolio = '#ORD-{{ order.id }}'; selectedStatus = '{{ order.estado }}'; currentNotes = ''"
+                                        class="text-white bg-gray-800 hover:bg-black px-3 py-1.5 rounded-md text-xs font-medium transition-colors shadow-sm focus:ring-2 focus:ring-offset-1 focus:ring-gray-900">
+                                        Actualizar / Notas
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-400">
+                                No se encontraron pedidos de clientes.
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
@@ -240,6 +220,9 @@
                             <div class="grid grid-cols-2 gap-4 text-sm">
                                 <div><span class="text-gray-500">Cliente:</span> <span class="font-bold text-gray-900" x-text="orderDetail.cliente"></span></div>
                                 <div><span class="text-gray-500">Tipo:</span> <span class="font-bold text-gray-900" x-text="orderDetail.tipo"></span></div>
+                                <div><span class="text-gray-500">Estado:</span> <span class="font-bold text-gray-900" x-text="orderDetail.estado"></span></div>
+                                <div><span class="text-gray-500">Total:</span> <span class="font-bold text-gray-900" x-text="'$' + orderDetail.total.toFixed(2)"></span></div>
+                                <div><span class="text-gray-500">Fecha:</span> <span class="font-bold text-gray-900" x-text="orderDetail.creado_en || 'N/A'"></span></div>
                             </div>
                             <div class="border rounded-lg overflow-hidden">
                                 <table class="min-w-full divide-y divide-gray-200 text-sm">
@@ -248,6 +231,7 @@
                                             <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">Producto</th>
                                             <th class="px-4 py-2 text-center text-xs font-bold text-gray-500 uppercase">Cant.</th>
                                             <th class="px-4 py-2 text-right text-xs font-bold text-gray-500 uppercase">Precio</th>
+                                            <th class="px-4 py-2 text-right text-xs font-bold text-gray-500 uppercase">Subtotal</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
@@ -256,6 +240,7 @@
                                                 <td class="px-4 py-2 text-gray-700" x-text="item.nombre"></td>
                                                 <td class="px-4 py-2 text-center text-gray-900 font-medium" x-text="item.cantidad"></td>
                                                 <td class="px-4 py-2 text-right text-gray-900 font-bold" x-text="item.precio"></td>
+                                                <td class="px-4 py-2 text-right text-gray-900 font-medium" x-text="item.subtotal"></td>
                                             </tr>
                                         </template>
                                     </tbody>

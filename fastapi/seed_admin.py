@@ -17,8 +17,7 @@ def seed_users():
             apellidos="Macuin",
             email="admin@macuin.com",
             telefono="5551234567",
-            # Hash para "admin123"
-            password_hash="$2b$12$EIKZ5T3M70s5vX/lE/D.XOfsY3o2rL.mG21yWn9T1uONPj/Q36S1q"
+            password_hash=get_password_hash("admin123")
         )
         # Insert generic client (Rol 2)
         client = models.Usuario(
@@ -27,8 +26,7 @@ def seed_users():
             apellidos="Prueba",
             email="cliente@correo.com",
             telefono="5559876543",
-            # Hash para "cliente123" 
-            password_hash="$2b$12$EIKZ5T3M70s5vX/lE/D.XOfsY3o2rL.mG21yWn9T1uONPj/Q36S1q"
+            password_hash=get_password_hash("cliente123")
         )
         
         # Insert dummy category and product to test order functionality

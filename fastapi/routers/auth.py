@@ -1,14 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from database import get_db
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 import models
 import schemas
 from utils import verify_password, create_access_token
 
 router = APIRouter()
 
+limiter = Limiter(key_func=get_remote_address)
+
 @router.post("/login", response_model=schemas.Token)
-def login(auth_data: schemas.UserAuth, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def login(request: Request, auth_data: schemas.UserAuth, db: Session = Depends(get_db)):
     user = db.query(models.Usuario).filter(models.Usuario.email == auth_data.email).first()
     if not user or not verify_password(auth_data.password, user.password_hash):
         raise HTTPException(

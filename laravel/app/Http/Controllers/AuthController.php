@@ -31,22 +31,28 @@ class AuthController extends Controller
 
             if ($response->successful()) {
                 $data = $response->json();
-                $user = $data['user'];
-                $token = $data['access_token'];
+                $user = $data['user'] ?? null;
+                $token = $data['access_token'] ?? null;
 
-                // Guardar en sesión
+                if (! $user || ! $token) {
+                    return back()->withErrors(['email' => 'La API respondió sin datos completos de usuario.']);
+                }
+
                 session(['user' => $user, 'jwt_token' => $token]);
 
-                // Si es Staff (Rol 1 o 3), redirigir directamente al Flask (Puerto 5000)
                 if (in_array($user['rol_id'], [1, 3])) {
                     return redirect()->away('http://localhost:5000/dashboard');
                 }
 
-                // Si es Cliente (Rol 2), entra a la tienda general
-                return redirect()->route('catalog.index');
+                if ($user['rol_id'] === 2) {
+                    return redirect()->route('catalog.index')->with('success', 'Ingreso exitoso. Redirigiendo al catálogo de clientes.');
+                }
+
+                return back()->withErrors(['email' => 'Tu cuenta ha iniciado sesión, pero no tiene permiso para este portal.']);
             }
 
-            return back()->withErrors(['email' => 'Credenciales inválidas.']);
+            $errorMessage = $response->json()['detail'] ?? 'Credenciales inválidas o error en el servicio.';
+            return back()->withErrors(['email' => $errorMessage]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return back()->withErrors(['email' => 'Error al conectar con la API central.']);

@@ -24,7 +24,7 @@ class OrderController extends Controller
     public function downloadPdf($orderId)
     {
         try {
-            $response = Http::timeout(10)->get("http://api:8000/api/reports/pdf/ventas_globales");
+            $response = Http::timeout(10)->get("http://api:8000/api/reports/pdf/ordenes_pendientes");
             if ($response->successful()) {
                 return response($response->body(), 200, [
                     'Content-Type' => 'application/pdf',

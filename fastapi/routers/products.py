@@ -6,8 +6,20 @@ import models
 router = APIRouter()
 
 @router.get("/")
-def get_products(db: Session = Depends(get_db)):
-    products = db.query(models.Producto).filter(models.Producto.activo == True).all()
+def get_products(skip: int = 0, limit: int = 100, search: str = None, categoria: str = None, precio_min: float = None, precio_max: float = None, db: Session = Depends(get_db)):
+    query = db.query(models.Producto).filter(models.Producto.activo == True)
+    
+    if search:
+        query = query.filter(models.Producto.nombre.ilike(f"%{search}%") | models.Producto.marca.ilike(f"%{search}%"))
+    if categoria:
+        query = query.join(models.Categoria).filter(models.Categoria.nombre.ilike(f"%{categoria}%"))
+    if precio_min is not None:
+        query = query.filter(models.Producto.precio >= precio_min)
+    if precio_max is not None:
+        query = query.filter(models.Producto.precio <= precio_max)
+    
+    total = query.count()
+    products = query.offset(skip).limit(limit).all()
     result = []
     for p in products:
         inv = db.query(models.Inventario).filter(models.Inventario.producto_id == p.id).first()
@@ -21,7 +33,7 @@ def get_products(db: Session = Depends(get_db)):
             "categoria": p.categoria.nombre if p.categoria else "",
             "stock": inv.stock_actual if inv else 0,
         })
-    return result
+    return {"total": total, "products": result}
 
 @router.get("/{product_id}")
 def get_product(product_id: int, db: Session = Depends(get_db)):

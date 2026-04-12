@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import requests
 import os
 
@@ -43,6 +43,22 @@ def require_login():
     return 'user' not in session
 
 
+def is_admin():
+    return session.get('user', {}).get('rol_id') == 1
+
+
+def is_internal_staff():
+    return session.get('user', {}).get('rol_id') == 3
+
+
+@app.context_processor
+def inject_user_roles():
+    return {
+        'is_admin': is_admin(),
+        'is_internal_staff': is_internal_staff()
+    }
+
+
 # ─── AUTH ──────────────────────────────────────────────────────
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
@@ -51,15 +67,23 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         data, code = api_post('/api/auth/login', {"email": email, "password": password})
-        if code == 200:
-            if data['user']['rol_id'] in [1, 3]:
-                session['user'] = data['user']
-                session['token'] = data['access_token']
+        if code == 200 and isinstance(data, dict):
+            user = data.get('user')
+            if not user:
+                flash('Autenticación recibida, pero la respuesta no contiene datos de usuario.')
+            elif user.get('rol_id') in [1, 3]:
+                session['user'] = user
+                session['token'] = data.get('access_token')
+                flash('Inicio de sesión correcto. Redirigiendo al dashboard interno...')
                 return redirect(url_for('dashboard'))
             else:
-                flash('Este portal es exclusivo para el personal interno de MACUIN.')
+                flash(f'Inicio de sesión correcto, pero tu rol actual ({user.get("rol_id")}) no tiene acceso al portal interno.')
+        elif code == 401:
+            flash('Credenciales incorrectas. Verifica tu correo y contraseña.')
+        elif code == 500:
+            flash('Error de conexión con el servicio de autenticación. Intenta de nuevo más tarde.')
         else:
-            flash('Credenciales incorrectas o usuario inactivo.')
+            flash(f'Error de autenticación ({code}). Por favor contacta con soporte.')
     return render_template('login.html')
 
 
@@ -89,7 +113,7 @@ def dashboard():
         'ticket': ticket,
         'ordenes_recientes': orders[-5:][::-1]
     }
-    return render_template('dashboard.html', stats=stats)
+    return render_template('dashboard.html', stats=stats, is_admin=is_admin(), is_internal_staff=is_internal_staff())
 
 
 # ─── INVENTARIO (CRUD completo) ─────────────────────────────────
@@ -97,7 +121,11 @@ def dashboard():
 def inventory():
     if require_login():
         return redirect(url_for('login'))
-    products = api_get('/api/products')
+    result = api_get('/api/products')
+    if isinstance(result, dict):
+        products = result.get('products', [])
+    else:
+        products = result or []
     return render_template('inventory.html', products=products)
 
 
@@ -161,6 +189,35 @@ def orders():
         return redirect(url_for('login'))
     all_orders = api_get('/api/orders/all')
     return render_template('orders.html', orders=all_orders)
+
+
+@app.route('/pedidos/detalle/<int:order_id>')
+def pedido_detalle(order_id):
+    if require_login():
+        return jsonify({'error': 'No autorizado'}), 401
+    all_orders = api_get('/api/orders/all')
+    if not isinstance(all_orders, list):
+        return jsonify({'error': 'No se pudo obtener el detalle'}), 500
+    order = next((o for o in all_orders if o.get('id') == order_id), None)
+    if not order:
+        return jsonify({'error': 'Pedido no encontrado'}), 404
+    response = {
+        'cliente': order.get('cliente_nombre') or f"Usuario {order.get('usuario_id')}",
+        'tipo': order.get('tipo_cliente') or 'Cliente',
+        'estado': order.get('estado') or 'Pendiente',
+        'total': float(order.get('total', 0.0)),
+        'creado_en': order.get('creado_en'),
+        'productos': [
+            {
+                'nombre': d.get('producto_nombre') or f"Producto #{d.get('producto_id')}",
+                'cantidad': d.get('cantidad', 0),
+                'precio': f"${float(d.get('precio_unitario', 0.0)):.2f}",
+                'subtotal': f"${float(d.get('subtotal', 0.0)):.2f}"
+            }
+            for d in order.get('detalles', [])
+        ]
+    }
+    return jsonify(response)
 
 
 @app.route('/orders/update/<int:order_id>', methods=['POST'])

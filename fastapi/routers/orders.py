@@ -69,13 +69,16 @@ def get_user_orders(user_id: int, db: Session = Depends(get_db)):
         result.append({
             "id": o.id,
             "estado": o.estado,
-            "total": o.total,
-            "creado_en": o.creado_en,
+            "total": float(o.total),
+            "creado_en": o.creado_en.isoformat() if o.creado_en else None,
+            "cliente_nombre": f"{o.usuario.nombre} {o.usuario.apellidos}" if o.usuario else None,
             "detalles": [
                 {
                     "producto_id": d.producto_id,
+                    "producto_nombre": d.producto.nombre if d.producto else None,
                     "cantidad": d.cantidad,
-                    "subtotal": d.subtotal
+                    "precio_unitario": float(d.precio_unitario),
+                    "subtotal": float(d.subtotal)
                 } for d in o.detalles
             ]
         })
@@ -89,10 +92,20 @@ def get_all_orders(db: Session = Depends(get_db)):
         result.append({
             "id": o.id,
             "usuario_id": o.usuario_id,
+            "cliente_nombre": f"{o.usuario.nombre} {o.usuario.apellidos}" if o.usuario else None,
             "estado": o.estado,
             "total": float(o.total),
             "tipo_cliente": o.tipo_cliente,
             "creado_en": o.creado_en.isoformat() if o.creado_en else None,
+            "detalles": [
+                {
+                    "producto_id": d.producto_id,
+                    "producto_nombre": d.producto.nombre if d.producto else None,
+                    "cantidad": d.cantidad,
+                    "precio_unitario": float(d.precio_unitario),
+                    "subtotal": float(d.subtotal)
+                } for d in o.detalles
+            ]
         })
     return result
 

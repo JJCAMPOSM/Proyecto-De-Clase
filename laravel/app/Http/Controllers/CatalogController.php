@@ -11,7 +11,10 @@ class CatalogController extends Controller
     {
         try {
             $response = Http::timeout(5)->get('http://api:8000/api/products');
-            $products = $response->successful() ? $response->json() : [];
+            $data = $response->successful() ? $response->json() : [];
+            $products = is_array($data) && array_key_exists('products', $data)
+                ? $data['products']
+                : $data;
         } catch (\Exception $e) {
             $products = [];
         }
