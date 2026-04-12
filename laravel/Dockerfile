@@ -21,5 +21,5 @@ WORKDIR /var/www/html
 # Mantenemos el contenedor en ejecución de manera básica.
 # Si el proyecto laravel existiera, usaríamos:
 # CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
-# Para propósito de inicialización usamos un script dummy
-CMD if [ -f artisan ]; then php artisan serve --host=0.0.0.0 --port=8000; else echo "Por favor, inicializa tu proyecto de Laravel en este volumen."; tail -f /dev/null; fi
+# Para propósito de inicialización usamos bash y nos aseguramos de montar composer
+CMD bash -c "if [ ! -f vendor/autoload.php ]; then composer install --no-interaction; fi && php artisan serve --host=0.0.0.0 --port=8000"

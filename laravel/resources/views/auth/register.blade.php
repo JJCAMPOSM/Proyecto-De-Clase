@@ -11,31 +11,38 @@
         </div>
 
         <div class="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-100 sm:px-10">
-            <form class="space-y-5" action="{{ route('login') }}" method="GET">
+            @if($errors->any())
+                <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            @if(session('success'))
+                <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <form class="space-y-5" action="{{ route('register.post') }}" method="POST">
+                @csrf
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                        <input id="nombre" name="nombre" type="text" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
+                        <input id="nombre" name="nombre" type="text" required value="{{ old('nombre') }}" class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
                     </div>
                     <div>
                         <label for="apellidos" class="block text-sm font-medium text-gray-700">Apellidos</label>
-                        <input id="apellidos" name="apellidos" type="text" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
+                        <input id="apellidos" name="apellidos" type="text" required value="{{ old('apellidos') }}" class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
                     </div>
                 </div>
 
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                    <input id="email" name="email" type="email" autocomplete="email" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
+                    <input id="email" name="email" type="email" autocomplete="email" required value="{{ old('email') }}" class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
                 </div>
 
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
                     <input id="password" name="password" type="password" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
-                </div>
-
-                <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
-                    <input id="password_confirmation" name="password_confirmation" type="password" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm">
                 </div>
 
                 <div class="pt-2">

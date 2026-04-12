@@ -16,6 +16,21 @@ services:
       - ./database:/docker-entrypoint-initdb.d
     restart: unless-stopped
 
+  # Central API
+  api:
+    build:
+      context: ./fastapi
+    container_name: proyecto_api
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./fastapi:/app
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://proyectouser:proyectopassword@db:5432/proyectodb
+    restart: unless-stopped
+
   # App Laravel (Para Clientes Externos)
   laravel:
     build:
@@ -25,8 +40,10 @@ services:
       - "8000:8000"
     volumes:
       - ./laravel:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
     depends_on:
-      - db
+      - api
     restart: unless-stopped
 
   # App Flask (Para Personal Interno)
@@ -44,6 +61,7 @@ services:
       - FLASK_APP=app.py
       - FLASK_ENV=development
       - FLASK_DEBUG=1
+      - API_URL=http://api:8000
     restart: unless-stopped
 
 volumes:

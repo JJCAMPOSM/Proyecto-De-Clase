@@ -7,135 +7,129 @@
     <div class="bg-gray-900 rounded-xl p-6 text-white flex justify-between items-center shadow-lg">
         <div>
             <h1 class="text-2xl font-extrabold tracking-tight">Sistema de Reportes</h1>
-            <p class="text-gray-400 text-sm">Resumen analítico de la Tienda de Autopartes</p>
+            <p class="text-gray-400 text-sm">Stats reales de MACUIN Autopartes</p>
         </div>
-        <button class="bg-white text-gray-900 px-4 py-2 rounded-lg font-bold text-sm hover:bg-gray-100 transition-colors flex items-center shadow-sm">
+        <a href="/reports/pdf/ventas_globales"
+            class="bg-white text-gray-900 px-4 py-2 rounded-lg font-bold text-sm hover:bg-gray-100 transition-colors flex items-center shadow-sm">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
             Exportar PDF
-        </button>
+        </a>
     </div>
 
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-        <div class="flex items-center space-x-2 mb-4 text-gray-700">
-            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            <h2 class="font-bold text-sm uppercase tracking-wider">Filtros de Reporte</h2>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">Tipo de Reporte</label>
-                    <select class="w-full border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand py-2">
-                        <option>Reporte de Ventas</option>
-                        <option>Inventario Crítico</option>
-                        <option>Desempeño de Clientes</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">Fecha Inicio</label>
-                    <input type="date" value="2026-01-01" class="w-full border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand py-2">
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">Rango de Fechas</label>
-                    <select class="w-full border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand py-2">
-                        <option>Últimos 30 días</option>
-                        <option>Este mes</option>
-                        <option>Este año</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">Fecha Fin</label>
-                    <input type="date" value="2026-02-01" class="w-full border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand py-2">
-                </div>
-            </div>
-
-            <div class="flex flex-col justify-between">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">Estado</label>
-                    <select class="w-full border-gray-300 rounded-lg text-sm focus:ring-brand focus:border-brand py-2">
-                        <option>Todos</option>
-                        <option>Completados</option>
-                        <option>Pendientes</option>
-                    </select>
-                </div>
-                <button class="w-full bg-brand text-white font-bold py-2.5 rounded-lg hover:bg-brand-dark transition-all shadow-md mt-4 flex items-center justify-center">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Generar Reporte
-                </button>
-            </div>
-        </div>
-    </div>
-
+    <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div>
                 <p class="text-xs font-medium text-gray-500 uppercase">Ventas Totales</p>
-                <h4 class="text-xl font-extrabold text-gray-900">$328,000</h4>
+                <h4 class="text-xl font-extrabold text-gray-900">${{ "%.2f"|format(stats.ventas) }}</h4>
             </div>
-            <span class="text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">+12.5%</span>
+            <span class="text-blue-600 text-xs font-bold bg-blue-50 px-2 py-1 rounded-lg">📊</span>
         </div>
         <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div>
                 <p class="text-xs font-medium text-gray-500 uppercase">Total Pedidos</p>
-                <h4 class="text-xl font-extrabold text-gray-900">890</h4>
+                <h4 class="text-xl font-extrabold text-gray-900">{{ stats.pedidos }}</h4>
             </div>
-            <span class="text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">+8.3%</span>
+            <span class="text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">🛒</span>
         </div>
         <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div>
-                <p class="text-xs font-medium text-gray-500 uppercase">Clientes Activos</p>
-                <h4 class="text-xl font-extrabold text-gray-900">342</h4>
+                <p class="text-xs font-medium text-gray-500 uppercase">Clientes Externos</p>
+                <h4 class="text-xl font-extrabold text-gray-900">{{ stats.clientes }}</h4>
             </div>
-            <span class="text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">+15.2%</span>
+            <span class="text-purple-600 text-xs font-bold bg-purple-50 px-2 py-1 rounded-lg">👥</span>
         </div>
         <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div>
                 <p class="text-xs font-medium text-gray-500 uppercase">Ticket Promedio</p>
-                <h4 class="text-xl font-extrabold text-gray-900">$368</h4>
+                <h4 class="text-xl font-extrabold text-gray-900">${{ "%.2f"|format(stats.ticket) }}</h4>
             </div>
-            <span class="text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">+6.7%</span>
+            <span class="text-yellow-600 text-xs font-bold bg-yellow-50 px-2 py-1 rounded-lg">💰</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center">
-                <svg class="w-4 h-4 mr-2 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
-                Evolución de Ventas Mensuales
-            </h3>
-            <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
-                <p class="text-gray-400 text-xs italic">Área para Gráfico Lineal (Ene - Jun)</p>
+    <!-- Generador de Reportes -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <h2 class="font-bold text-gray-900 mb-4 flex items-center text-sm uppercase tracking-wider">
+            <svg class="w-5 h-5 mr-2 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Generar y Descargar Reporte
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Ventas Globales -->
+            <div class="border border-gray-200 rounded-xl p-4">
+                <h3 class="font-bold text-gray-800 mb-1 text-sm">📈 Ventas Globales</h3>
+                <p class="text-xs text-gray-500 mb-3">Todas las órdenes y montos acumulados.</p>
+                <div class="flex gap-2 flex-wrap">
+                    <a href="/reports/xlsx/ventas_globales" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-bold">Excel</a>
+                    <a href="/reports/pdf/ventas_globales" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 font-bold">PDF</a>
+                    <a href="/reports/docx/ventas_globales" class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 font-bold">Word</a>
+                </div>
             </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center">
-                <svg class="w-4 h-4 mr-2 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
-                Distribución de Clientes por Tipo
-            </h3>
-            <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
-                <p class="text-gray-400 text-xs italic">Área para Gráfico de Pastel (Talleres, Empresas, etc.)</p>
+            <!-- Stock Bajo -->
+            <div class="border border-gray-200 rounded-xl p-4">
+                <h3 class="font-bold text-gray-800 mb-1 text-sm">⚠️ Inventario Bajo</h3>
+                <p class="text-xs text-gray-500 mb-3">Productos con stock igual o menor al mínimo.</p>
+                <div class="flex gap-2 flex-wrap">
+                    <a href="/reports/xlsx/stock_bajo" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-bold">Excel</a>
+                    <a href="/reports/pdf/stock_bajo" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 font-bold">PDF</a>
+                    <a href="/reports/docx/stock_bajo" class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 font-bold">Word</a>
+                </div>
+            </div>
+            <!-- Órdenes Pendientes -->
+            <div class="border border-gray-200 rounded-xl p-4">
+                <h3 class="font-bold text-gray-800 mb-1 text-sm">🕒 Órdenes Pendientes</h3>
+                <p class="text-xs text-gray-500 mb-3">Todos los pedidos que requieren atención.</p>
+                <div class="flex gap-2 flex-wrap">
+                    <a href="/reports/xlsx/ordenes_pendientes" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-bold">Excel</a>
+                    <a href="/reports/pdf/ordenes_pendientes" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 font-bold">PDF</a>
+                    <a href="/reports/docx/ordenes_pendientes" class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 font-bold">Word</a>
+                </div>
+            </div>
+            <!-- Logs -->
+            <div class="border border-gray-200 rounded-xl p-4">
+                <h3 class="font-bold text-gray-800 mb-1 text-sm">📋 Actividad de Empleados</h3>
+                <p class="text-xs text-gray-500 mb-3">Registro de acciones del personal interno.</p>
+                <div class="flex gap-2 flex-wrap">
+                    <a href="/reports/xlsx/logs_empleados" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-bold">Excel</a>
+                    <a href="/reports/pdf/logs_empleados" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 font-bold">PDF</a>
+                    <a href="/reports/docx/logs_empleados" class="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 font-bold">Word</a>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Pedidos Recientes -->
     <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-        <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center">
-            <svg class="w-4 h-4 mr-2 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-            Top 5 Productos Más Vendidos
-        </h3>
-        <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
-            <p class="text-gray-400 text-xs italic">Área para Gráfico de Barras Horizontales o Verticales</p>
-        </div>
+        <h3 class="text-sm font-bold text-gray-900 mb-4">Pedidos Recientes</h3>
+        {% if stats.ordenes_recientes %}
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <thead><tr>
+                <th class="px-4 py-2 text-left text-xs text-gray-500 font-semibold uppercase">ID</th>
+                <th class="px-4 py-2 text-left text-xs text-gray-500 font-semibold uppercase">Estado</th>
+                <th class="px-4 py-2 text-right text-xs text-gray-500 font-semibold uppercase">Total</th>
+            </tr></thead>
+            <tbody class="divide-y divide-gray-100">
+            {% for o in stats.ordenes_recientes %}
+            <tr>
+                <td class="px-4 py-2 font-mono text-gray-700">#ORD-{{ "%06d"|format(o.id) }}</td>
+                <td class="px-4 py-2">
+                    <span class="px-2 py-0.5 rounded-full text-xs font-semibold 
+                        {{ 'bg-yellow-100 text-yellow-800' if o.estado == 'Pendiente' else 'bg-green-100 text-green-800' }}">
+                        {{ o.estado }}
+                    </span>
+                </td>
+                <td class="px-4 py-2 text-right font-bold text-gray-900">${{ "%.2f"|format(o.total) }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-gray-400 text-sm text-center py-6">No hay pedidos registrados aún.</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Instalar dependencias básicas necesarias
-RUN pip install --no-cache-dir Flask psycopg2-binary SQLAlchemy python-dotenv
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt Flask psycopg2-binary SQLAlchemy python-dotenv
 
 # Mantenemos el contenedor en ejecución de manera básica.
 # Si existiera una app Flask real lista, la iniciaríamos:

@@ -11,7 +11,8 @@
         </div>
 
         <div class="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-100 sm:px-10">
-            <form class="space-y-6" action="{{ route('catalog.index') }}" method="GET">
+            <form class="space-y-6" action="{{ route('login.post') }}" method="POST">
+                @csrf
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
                     <div class="mt-1">
